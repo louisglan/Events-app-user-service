@@ -1,0 +1,8 @@
+{
+  "username": "John",
+  "email": "john@doe.com",
+  "dateOfBirth": "2000-05-02",
+  "role": "user",
+  "password": "abc",
+  "confirmPassword": "abc"
+}
