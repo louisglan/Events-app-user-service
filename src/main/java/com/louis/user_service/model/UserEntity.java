@@ -1,11 +1,16 @@
 package com.louis.user_service.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 import java.time.LocalDate;
 
-public record UserEntity(String email,
-                         String username,
-                         LocalDate dateOfBirth,
-                         Role role,
-                         String password,
-                         String confirmPassword) {
+@Entity
+public record UserEntity(
+        @Id
+        String email,
+        String username,
+        LocalDate dateOfBirth,
+        Role role,
+        String hashedPassword) {
 }
