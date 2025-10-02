@@ -16,7 +16,7 @@ public class UserController {
     UserController(UserService userService) {
         this.userService = userService;
     }
-    @PostMapping("")
+    @PostMapping("/signup")
     @SuppressWarnings("unused")
     public ResponseEntity<UserRegistrationDto> CreateUser(@RequestBody UserRegistrationDto user) {
         userService.addUser(user);

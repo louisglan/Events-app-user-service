@@ -4,25 +4,24 @@ import com.louis.user_service.model.Role;
 import com.louis.user_service.model.UserEntity;
 import com.louis.user_service.model.dto.UserRegistrationDto;
 import com.louis.user_service.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
     @Mock
     private UserRepository userRepository;
     @Mock
-    @SuppressWarnings("unused")
     private PasswordEncoder passwordEncoder;
-    @InjectMocks
     private UserService userService;
 
     UserRegistrationDto validUser = new UserRegistrationDto(
@@ -32,17 +31,22 @@ public class UserServiceTest {
             "abc",
             "abc");
 
-    @Captor
-    ArgumentCaptor<UserEntity> acUserEntity;
+    @BeforeEach
+    public void setup() {
+        userService = new UserService(userRepository, passwordEncoder);
+    }
 
     @Test
     public void testSavesToRepositoryWithCorrectFieldAssignment() {
+        when(passwordEncoder.encode(any())).thenReturn("mockHashedPassword");
         userService.addUser(validUser);
-        verify(userRepository).save(acUserEntity.capture());
-        assertEquals(validUser.email(), acUserEntity.getValue().email());
-        assertEquals(validUser.username(), acUserEntity.getValue().username());
-        assertEquals(validUser.dateOfBirth(), acUserEntity.getValue().dateOfBirth());
-        assertEquals(Role.USER, acUserEntity.getValue().role());
-        assertNotEquals(validUser.password(), acUserEntity.getValue().hashedPassword());
+        UserEntity validUserEntity = new UserEntity(
+            "John@Doe.com",
+            "John",
+            LocalDate.of(2000, 2, 5),
+            Role.USER,
+            "mockHashedPassword"
+        );
+        verify(userRepository).save(validUserEntity);
     }
 }
