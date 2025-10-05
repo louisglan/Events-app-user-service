@@ -14,7 +14,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+// The @WebMvcTest annotation allows you to use MockMvc but only loads the web layer - it is more lightweight than
+// @SpringBootTest and is better suited to controller tests. Passing in UserController only instantiates the controller
+// you pass in
 @WebMvcTest(UserController.class)
+
+// Without the below import, the test configuration will not be aware of the security configuration and so will just
+// use the default spring boot configuration
 @Import(SecurityConfig.class)
 public class UserControllerTest {
     @MockitoBean

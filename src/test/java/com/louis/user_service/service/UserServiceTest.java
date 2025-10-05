@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+// We need to extend with MockitoExtension so that mocks can be initialised
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
     @Mock
@@ -31,6 +32,7 @@ public class UserServiceTest {
             "abc",
             "abc");
 
+    // I have opted not to use @InjectMocks because it does not tell you if it fails
     @BeforeEach
     public void setup() {
         userService = new UserService(userRepository, passwordEncoder);

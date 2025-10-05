@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+// I did not use a record here as they are ideal for immutable data, especially DTOs
 @Data
 @Entity
 @NoArgsConstructor

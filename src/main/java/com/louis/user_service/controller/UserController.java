@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+// @RestController over @Controller means you don't have to use @ResponseBody annotations
 @RestController
 @RequestMapping("/api/users")
 public class UserController {

@@ -13,8 +13,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+// @SpringBootTest loads the entire application context so is good for integration tests. See UserControllerTest for
+// comparison
 @SpringBootTest
+
+// @AutoConfigureMockMvc enables and configures MockMvc. We don't need this in the controller test class because
+// @WebMvcTest does this for us
 @AutoConfigureMockMvc
+
+// See UserControllerTest to see why this import is needed
 @Import(SecurityConfig.class)
 public class UserIntegrationTest {
     @Autowired
