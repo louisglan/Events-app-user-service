@@ -8,14 +8,22 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class TestUtils {
-    public static <T> T readJson(String path, Class<T> clazz) throws IOException {
+    public static <T> T readJson(String path, Class<T> clazz) {
         ObjectMapper objectMapper = new ObjectMapper();
-        InputStream resourceInputStream = new ClassPathResource(path).getInputStream();
-        return objectMapper.readValue(resourceInputStream, clazz);
+        try {
+            InputStream resourceInputStream = new ClassPathResource(path).getInputStream();
+            return objectMapper.readValue(resourceInputStream, clazz);
+        } catch (IOException exception) {
+            throw new RuntimeException("Could not parse json from path: " + path, exception);
+        }
     }
 
-    public static String getJsonString(String path) throws IOException {
+    public static String getJsonString(String path) {
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(readJson(path, JsonNode.class));
+        try {
+            return objectMapper.writeValueAsString(readJson(path, JsonNode.class));
+        } catch (IOException exception) {
+            throw new RuntimeException("Failed to convert JSON to string from path: " + path, exception);
+        }
     }
 }

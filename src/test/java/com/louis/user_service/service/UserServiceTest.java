@@ -9,10 +9,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -43,12 +47,19 @@ public class UserServiceTest {
         when(passwordEncoder.encode(any())).thenReturn("mockHashedPassword");
         userService.addUser(validUser);
         UserEntity validUserEntity = new UserEntity(
-            "John@Doe.com",
+            "john@doe.com",
             "John",
             LocalDate.of(2000, 2, 5),
             Role.USER,
             "mockHashedPassword"
         );
         verify(userRepository).save(validUserEntity);
+    }
+
+    @Test
+    public void testUserAlreadyExistsThrowsConflictException() {
+        when(userRepository.existsByEmail(validUser.email().toLowerCase())).thenReturn(true);
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> userService.addUser(validUser));
+        assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
     }
 }
